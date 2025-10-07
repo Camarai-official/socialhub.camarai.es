@@ -84,7 +84,7 @@ El diseño sigue estrictamente las **Apple Human Interface Guidelines** para cre
 
 ---
 
-## 📱 Responsive Design
+## 📱 Responsive Design (EN PROGRESO, FALTAN CORREGIR BUGS)
 
 ### **Media Queries Estratégicas**
 
