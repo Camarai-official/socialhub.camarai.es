@@ -296,10 +296,9 @@ a-hole canvas.js-canvas {
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     /* width: 100%; */
     max-width: 90vw;
-    /* Altura máxima para que no desborde la pantalla, considerando el footer fijo */
-    /* max-height: calc(100vh - 450px); */
-    /* min-height: 500px; */
-    /* animation: navbarFloat 12s ease-in-out infinite; */
+    /* Restricción de altura para PC para evitar desbordamiento por debajo del footer */
+    max-height: calc(100vh - 420px);
+    min-height: 300px;
     /* Scroll interno cuando el contenido excede */
     overflow-y: auto;
     overflow-x: hidden;
