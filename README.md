@@ -5,10 +5,10 @@
 
 ---
 
-## Problemas a resolver (GRAVE/URGENTE)
+## Problemas a resolver con FenixReload v2 (🔥GRAVE/URGENTE🔥)
 
 - **Imagenes en b64**: Es necesaria una indicacion de como inyectar base64 en una etiqueta img, no se esta agregando la cabecera "data:image/jpeg;base64,...".
-
+- **Lisener para gestionar la carga**: Necesitamos algo que nos permita escuchar al framework para poder mostrar un loader mientras se hace la peticion.
 
 ## 📋 Descripción del Proyecto
 
