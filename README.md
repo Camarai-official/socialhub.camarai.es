@@ -5,6 +5,11 @@
 
 ---
 
+## Problemas a resolver (GRAVE/URGENTE)
+
+- **Imagenes en b64**: Es necesaria una indicacion de como inyectar base64 en una etiqueta img, no se esta agregando la cabecera "data:image/jpeg;base64,...".
+
+
 ## 📋 Descripción del Proyecto
 
 **SocialHub** es una aplicación web moderna y elegante diseñada para la gestión y generación de contenido para redes sociales. La herramienta combina un diseño inspirado en las **Apple Human Interface Guidelines** con una arquitectura robusta basada en **FenixReload Framework v2**.

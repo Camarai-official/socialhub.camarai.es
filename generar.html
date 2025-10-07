@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- https://corsproxy.io/?url= -->
     <server>
-        <api host="https://corsproxy.io/?url=https://bot1.camarai.es/webhook-test" headers="Content-Type" Content-Type="application/json"></api>
+        <api host="https://bot1.camarai.es/webhook" headers="Content-Type" Content-Type="application/json"></api>
     </server>
     <!-- ESTARIA TOP QUE SE PUDIERA RENDERIZAR JAVASCRIPT DESDE AQUI -->
     <!-- Post Generator Container -->
@@ -71,7 +72,7 @@
 
                 <!-- Botón Generar -->
                 <div class="generate-section">
-                    <button type="submit" class="generate-btn" method="post" host="api" path="/generate-post" print="#post-preview-data" body="post-form">
+                    <button type="submit" class="generate-btn" method="post" host="api" path="/gen-socialhub-post" print="#post-preview-data" body="post-form">
                         <span class="btn-icon">✨</span>
                         Generar Post
                     </button>
