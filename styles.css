@@ -1018,7 +1018,7 @@ a-hole canvas.js-canvas {
     
     .content-container {
         /* Ajuste específico para móviles reales */
-        max-height: calc(100dvh - 500px); /* Más espacio para evitar superposición */
+        max-height: calc(100dvh - 460px); /* Más espacio para evitar superposición */
         margin-bottom: 20px; /* Margen adicional */
     }
     
