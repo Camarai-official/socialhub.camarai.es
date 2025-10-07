@@ -20,6 +20,7 @@ body {
     overflow-x: hidden;
     overflow-y: hidden; /* Prevenir scroll del body */
     height: 100vh; /* Altura fija del viewport */
+    height: 100dvh; /* Altura dinámica del viewport para móviles */
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -32,6 +33,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh; /* Altura dinámica del viewport para móviles */
     z-index: 0;
     overflow: hidden;
 }
@@ -115,6 +117,7 @@ a-hole canvas.js-canvas {
     position: relative;
     z-index: 10;
     min-height: 100vh; /* Altura mínima del viewport */
+    min-height: 100dvh; /* Altura dinámica del viewport para móviles */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -402,6 +405,7 @@ a-hole canvas.js-canvas {
         min-height: 120px;
         /* Más espacio para el contenido en móvil, considerando footer fijo */
         max-height: calc(100vh - 420px);
+        max-height: calc(100dvh - 420px); /* Altura dinámica del viewport para móviles */
     }
 }
 
@@ -434,6 +438,7 @@ a-hole canvas.js-canvas {
     .content-container {
         /* Ajuste de altura para pantallas muy pequeñas, considerando footer fijo */
         max-height: calc(100vh - 350px);
+        max-height: calc(100dvh - 350px); /* Altura dinámica del viewport para móviles */
         min-height: 100px;
         padding: 0.5rem;
     }
@@ -997,6 +1002,35 @@ a-hole canvas.js-canvas {
     font-size: 0.9rem;
     padding: 1rem 0;
     z-index: 100;
+    /* Asegurar que el footer esté siempre al final en móviles */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+/* ===== MOBILE VIEWPORT FIXES ===== */
+/* Solución específica para dispositivos móviles reales */
+@media (max-width: 768px) and (orientation: portrait) {
+    .main-content {
+        /* Asegurar que el contenido no se superponga con el footer en móviles */
+        padding-bottom: 140px; /* Más espacio para el footer */
+        min-height: 100dvh;
+    }
+    
+    .content-container {
+        /* Ajuste específico para móviles reales */
+        max-height: calc(100dvh - 500px); /* Más espacio para evitar superposición */
+        margin-bottom: 20px; /* Margen adicional */
+    }
+    
+    .main-footer {
+        /* Asegurar que el footer esté siempre visible en móviles */
+        position: fixed;
+        bottom: 0;
+        z-index: 1000; /* Z-index más alto para móviles */
+        /* background: rgba(20, 20, 20, 0); Fondo semi-transparente */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
 }
 
 .footer-main-text {
