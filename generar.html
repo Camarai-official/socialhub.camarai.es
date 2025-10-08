@@ -1,61 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar Post - SocialHub</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- https://corsproxy.io/?url= -->
-    <server>
-        <api host="https://bot1.camarai.es/webhook" headers="Content-Type" Content-Type="application/json"></api>
-    </server>
-    <!-- ESTARIA TOP QUE SE PUDIERA RENDERIZAR JAVASCRIPT DESDE AQUI -->
-    <!-- Post Generator Container -->
+<!-- Post Generator Container -->
+<div class="generar-view">
     <div class="post-generator-container">
-        <!-- Left Column - Controls -->
-        <div class="controls-section">
+    
+        <div class="mobile-tabs">
+            <button class="mobile-tab-btn active" data-tab="controls">
+                <span class="btn-icon">⚙️</span> Configuración
+            </button>
+            <button class="mobile-tab-btn" data-tab="preview">
+                <span class="btn-icon">📄</span> Vista Previa
+            </button>
+        </div>
+    
+        <div class="controls-section active" data-content="controls">
             <div class="section-header">
                 <h2>Configuración del Post</h2>
                 <p>Personaliza tu contenido</p>
             </div>
             
             <form id="post-generator-form" data="topic meta details scenario content-format" class="controls-grid" post-form>
-
+    
                 <div class="inputs-row">
-                    <!-- ¿Sobre qué quieres hablar? -->
                     <div class="control-group">
                         <label for="topic">¿Sobre qué quieres hablar?</label>
                         <textarea id="topic" post-form="topic" name="topic" class="control-textarea" placeholder="Ej: La sostenibilidad en la moda..." rows="3" maxlength="150"></textarea>
                     </div>
-                    <!-- ¿Qué quieres lograr con este post? -->
                     <div class="control-group">
                         <label for="meta">¿Qué quieres lograr con este post?</label>
                         <textarea id="meta" post-form="meta" name="meta" class="control-textarea" placeholder="Ej: Posicionar a Camarai en la industria..." rows="3" maxlength="150"></textarea>
                     </div>
                 </div>
-
+    
                 <div class="inputs-row">
-                    <!-- Detalles del post -->
                     <div class="control-group">
                         <label for="details">Detalles del post</label>
                         <textarea id="details" post-form="details" name="details" class="control-textarea" placeholder="Dato, reflexion, historia, enfoque, etc..." rows="3" maxlength="200"></textarea>
                     </div>
-                    <!-- Escenario de la imagen -->
                     <div class="control-group">
                         <label for="scenario">Escenario de la imagen *OPCIONAL*</label>
                         <textarea id="scenario" post-form="scenario" name="scenario" class="control-textarea" placeholder="Ej: Camarai en un ambiente urbano..." rows="3" maxlength="100"></textarea>
                     </div>
                 </div>
-
-                <!-- Formato del Contenido -->
+    
                 <div class="control-group">
                     <label for="content-tone">Formato del Contenido</label>
-                    <!-- Input hidden que captura la selección real del usuario -->
                     <input type="hidden" id="content-format-selected" post-form="content-format" value="empresa">
                     <div class="format-buttons">
                         <label class="format-btn active" for="format-empresa">
@@ -68,71 +55,48 @@
                         </label>
                     </div>
                 </div>
-
-
-                <!-- Botón Generar -->
+    
                 <div class="generate-section">
-                    <button type="submit" class="generate-btn" method="post" host="api" path="/gen-socialhub-post" print="#post-preview-data" body="post-form">
+                    <button type="submit" class="generate-btn" method="post" host="api" path="/gen-socialhub-post" print="#generar-preview-data" body="post-form">
                         <span class="btn-icon">✨</span>
                         Generar Post
                     </button>
                 </div>
             </form>
         </div>
-
-        <!-- Right Column - Preview -->
-        <div class="preview-section">
+    
+        <div class="preview-section" data-content="preview">
             <div class="section-header">
                 <h2>Vista Previa</h2>
                 <p>Tu post se verá así</p>
             </div>
             
-            <div id="post-preview-data">
+            <div id="generar-preview-data" style="display: block;">
                 <div class="post-preview">
-                    <!-- Imagen del Post -->
                     <div class="post-image-container">
                         <div class="image-placeholder">
                             <div class="image-icon">
-
-                                <img data>
-
+                                <img img_url>
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                                     <circle cx="8.5" cy="8.5" r="1.5"/>
                                     <polyline points="21,15 16,10 5,21"/>
+                                    
                                 </svg>
+                                
                             </div>
-                            <p class="image-text">Imagen generada aparecerá aquí</p>
+                            <p class="image-text">La imagen generada aparecerá aquí</p>
                         </div>
                     </div>
                     
-                    <!-- Texto del Post -->
                     <div class="post-text-container">
-                        <!-- <span ></span> -->
                         <div class="post-text">
-                            <p prompt class="placeholder-text">
-                                Aquí verás el texto del post generado. El contenido se generará automáticamente basado en tus configuraciones y se mostrará en este espacio.
+                            <p body class="placeholder-text">Aquí verás el texto del post generado. El contenido se generará automáticamente basado en tus configuraciones y se mostrará en este espacio.
                             </p>
                         </div>
-                        
                     </div>
-
-                    <!-- Acciones del Post -->
-                    <!-- <div class="post-actions">
-                        <button class="action-btn copy-post-btn">      
-                            <span class="btn-icon">📋</span>
-                            Copiar Texto
-                        </button>
-                        <button class="action-btn download-post-btn">
-                            <span class="btn-icon">💾</span>
-                            Descargar Imagen
-                        </button>
-                    </div> -->
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- JavaScript moved to index.html for framework compatibility -->
-</body>
-</html>
+</div>

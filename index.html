@@ -2,426 +2,76 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#554696">
     <title>SocialHub - CamarAI</title>
     
-    <!-- Google Fonts - Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
+    
+    <script src="fr_v2_release.js" defer></script>
+    <script src="app.js" defer></script>
 </head>
 <body layer="generar gestionar">
-    <!-- Animated background container -->
-    <div class="animated-background-container" style="width: 100vw; height: 100vh; background-color: #141414ac;">
+    <server>
+        <api host="https://bot1.camarai.es/webhook" headers="Content-Type" Content-Type="application/json"></api>
+    </server>
+    <!-- <div style="background-color: #ffffff;">
+
+    </div> -->
+    
+    <!-- <div class="animated-background-container">
         <a-hole>
             <canvas class="js-canvas"></canvas>
             <div class="aura"></div>
         </a-hole>
-    </div>
+    </div> -->
 
-    <!-- Development Warning -->
     <div class="dev-warning">
-        <span class="dev-warning-icon">⚠️</span>
-        <p class="dev-warning-text">Herramienta en desarrollo, sin funcionalidad real aún...</p>
+        <span class="dev-warning__icon" aria-hidden="true">⚠️</span>
+        <p class="dev-warning__text">Herramienta en desarrollo.</p>
     </div>
 
-    <!-- Main content -->
-    <div class="main-content">
-        <!-- Title section with CamarAI mascots -->
-        <div class="title-container">
+    <main class="app-layout" style="background-color: #0a0a0a82;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;">
+            <background_template load="background_template.html"></background_template>
+        </div>
+
+        <header class="title-container glass-panel">
             <img 
                 src="/assets/camarai.gif" 
-                alt="CamarAI Mascot Left" 
-                class="camarai-gif camarai-gif-left"
+                alt="CamarAI Mascot" 
+                class="camarai-gif camarai-gif--left"
             >
             <h1 class="title">SocialHub</h1>
             <img 
                 src="/assets/camarai.gif" 
-                alt="CamarAI Mascot Right" 
-                class="camarai-gif camarai-gif-right"
+                alt="CamarAI Mascot" 
+                class="camarai-gif camarai-gif--right"
             >
-        </div>
+        </header>
         
-        <!-- Navigation section -->
-        <nav class="navbar-container"
-        style="max-width: 400px;"
-        >
-            <div class="floating-navbar">
-                <button class="nav-button" view="body/generar"> 
-                    Generar
-                </button>
-                <button class="nav-button" view="body/gestionar"> 
-                    Gestionar
-                </button>
+        <nav class="navbar">
+            <div class="navbar__floating glass-panel">
+                <button class="nav-button" view="body/generar">Generar</button>
+                <button class="nav-button" view="body/gestionar">Gestionar</button>
             </div>
         </nav>
         
-        <!-- Content section -->
-        <div class="content-container">
+        <section class="content-container glass-panel">
             <generar load="generar.html"></generar>
             <gestionar load="gestionar.html"></gestionar>
-        </div>
-
+        </section>
         <footer class="main-footer">
-            <p class="footer-main-text">Made with ❤️ by Society</p>
-            <p class="footer-sub-text">Supported by FenixReload | Prompting by Gabri | All rights reserved © CamarAI & Society</p>
+            <p class="main-footer__primary-text">Made with ❤️ by Society</p>
+            <p class="main-footer__secondary-text">Supported by FenixReload | All rights reserved © CamarAI & Society</p>
         </footer>
-    </div>
-    
-    <script src="fr_v2_release.js"></script>
-    <script>
-        // ===== POST GENERATOR FUNCTIONALITY =====
-        
-        // Auto-resize functionality removed - textareas maintain fixed size
+    </main>
 
-        // Initialize post generator when content loads
-        function initializePostGenerator() {
-            console.log('[PostGenerator] Initializing post generator...');
-            
-        // Textareas will maintain their fixed size (auto-resize removed)
-        const textareas = document.querySelectorAll('.control-textarea');
-        console.log('[PostGenerator] Found textareas:', textareas.length, '(auto-resize disabled)');
-            
-            // Format radio buttons functionality
-            const formatRadios = document.querySelectorAll('input[name="content-format"]');
-            const formatLabels = document.querySelectorAll('.format-btn');
-            console.log('[PostGenerator] Found format radios:', formatRadios.length);
-            
-            formatRadios.forEach((radio, index) => {
-                console.log(`[PostGenerator] Format radio ${index + 1}:`, radio.value);
-                
-                radio.addEventListener('change', function() {
-                    // Remove active class from all labels
-                    formatLabels.forEach(label => label.classList.remove('active'));
-                    // Add active class to the selected label
-                    this.closest('label').classList.add('active');
-                    console.log('[PostGenerator] Format changed to:', this.value);
-                    
-                    // [updateHiddenInput] Actualizar el input hidden con el valor seleccionado
-                    const hiddenInput = document.getElementById('content-format-selected');
-                    if (hiddenInput) {
-                        hiddenInput.value = this.value;
-                        console.log('[PostGenerator] Hidden input updated to:', hiddenInput.value);
-                    } else {
-                        console.log('[PostGenerator] Warning: Hidden input not found');
-                    }
-                });
-            });
-            
-            // Also handle label clicks for better UX
-            formatLabels.forEach(label => {
-                label.addEventListener('click', function() {
-                    const radio = this.querySelector('input[type="radio"]');
-                    if (radio) {
-                        radio.checked = true;
-                        radio.dispatchEvent(new Event('change'));
-                        
-                        // [updateHiddenInput] También actualizar el input hidden cuando se hace clic en el label
-                        const hiddenInput = document.getElementById('content-format-selected');
-                        if (hiddenInput) {
-                            hiddenInput.value = radio.value;
-                            console.log('[PostGenerator] Hidden input updated via label click to:', hiddenInput.value);
-                        }
-                    }
-                });
-            });
 
-            // Form submission functionality
-            const form = document.querySelector('#post-generator-form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    console.log('[PostGenerator] Form submitted');
-                    
-                    // Get form data
-                    const formData = new FormData(this);
-                    const data = Object.fromEntries(formData);
-                    
-                    console.log('[PostGenerator] Form data:', data);
-                    
-                    // Show loading state
-                    const submitBtn = this.querySelector('.generate-btn');
-                    if (submitBtn) {
-                        submitBtn.innerHTML = '<span class="btn-icon">⏳</span>Generando...';
-                        submitBtn.disabled = true;
-                        
-                        // Simulate processing
-                        setTimeout(() => {
-                            submitBtn.innerHTML = '<span class="btn-icon">✨</span>Generar Post';
-                            submitBtn.disabled = false;
-                        }, 2000);
-                    }
-                });
-            }
 
-            // Copy and download buttons
-            const copyBtn = document.querySelector('.copy-post-btn');
-            const downloadBtn = document.querySelector('.download-post-btn');
-            
-            if (copyBtn) {
-                copyBtn.addEventListener('click', function() {
-                    console.log('[PostGenerator] Copy button clicked');
-                });
-            }
-            
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', function() {
-                    console.log('[PostGenerator] Download button clicked');
-                });
-            }
-        }
-
-        // ===== MAIN PAGE FUNCTIONALITY =====
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('[DOMContentLoaded] SocialHub page loaded successfully');
-            
-            // Add entrance animation for title and navbar
-            const titleContainer = document.querySelector('.title-container');
-            const navbar = document.querySelector('.floating-navbar');
-            
-            if (titleContainer && navbar) {
-                // Initial hidden state
-                titleContainer.style.opacity = '0';
-                titleContainer.style.transform = 'translateY(-30px)';
-                navbar.style.opacity = '0';
-                navbar.style.transform = 'translateY(30px)';
-                
-                // Animate title container
-                setTimeout(() => {
-                    titleContainer.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                    titleContainer.style.opacity = '1';
-                    titleContainer.style.transform = 'translateY(0)';
-                }, 200);
-                
-                // Animate navbar
-                setTimeout(() => {
-                    navbar.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                    navbar.style.opacity = '1';
-                    navbar.style.transform = 'translateY(0)';
-                }, 600);
-            }
-        });
-
-        // ===== GESTIONAR FUNCTIONALITY =====
-        
-        // Initialize gestionar interface when content loads
-        function initializeGestionar() {
-            console.log('[Gestionar] Initializing content management interface...');
-            
-            // Tab switching
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            tabButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    tabButtons.forEach(t => t.classList.remove('active'));
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    
-                    const tabType = this.dataset.tab;
-                    console.log('[Gestionar] Tab switched to:', tabType);
-                    
-                    // Filter posts based on tab
-                    filterPostsByTab(tabType);
-                });
-            });
-
-            // Filter functionality
-            const searchFilter = document.getElementById('search-filter');
-            const formatFilter = document.getElementById('format-filter');
-            const dateFilter = document.getElementById('date-filter');
-            const statusRadios = document.querySelectorAll('input[name="post-status"]');
-
-            // Search filter
-            if (searchFilter) {
-                searchFilter.addEventListener('input', function() {
-                    console.log('[Gestionar] Search filter changed:', this.value);
-                    applyFilters();
-                });
-            }
-
-            // Format filter
-            if (formatFilter) {
-                formatFilter.addEventListener('change', function() {
-                    console.log('[Gestionar] Format filter changed:', this.value);
-                    applyFilters();
-                });
-            }
-
-            // Date filter
-            if (dateFilter) {
-                dateFilter.addEventListener('change', function() {
-                    console.log('[Gestionar] Date filter changed:', this.value);
-                    applyFilters();
-                });
-            }
-
-            // Status filter
-            statusRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    console.log('[Gestionar] Status filter changed:', this.value);
-                    applyFilters();
-                });
-            });
-
-            // Modal close functionality
-            const statusModal = document.getElementById('status-modal');
-            if (statusModal) {
-                statusModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeStatusModal();
-                    }
-                });
-            }
-        }
-
-        // Filter posts by tab
-        function filterPostsByTab(tabType) {
-            const postCards = document.querySelectorAll('.post-card');
-            
-            postCards.forEach(card => {
-                if (tabType === 'todos') {
-                    card.style.display = 'block';
-                } else if (tabType === 'aprobados') {
-                    const status = card.dataset.status;
-                    card.style.display = status === 'aprobado' ? 'block' : 'none';
-                }
-            });
-        }
-
-        // Apply all filters
-        function applyFilters() {
-            const searchTerm = document.getElementById('search-filter')?.value.toLowerCase() || '';
-            const formatValue = document.getElementById('format-filter')?.value || '';
-            const dateValue = document.getElementById('date-filter')?.value || '';
-            const statusValue = document.querySelector('input[name="post-status"]:checked')?.value || 'todos';
-            
-            const postCards = document.querySelectorAll('.post-card');
-            
-            postCards.forEach(card => {
-                let showCard = true;
-                
-                // Search filter
-                if (searchTerm) {
-                    const title = card.querySelector('.post-title')?.textContent.toLowerCase() || '';
-                    const description = card.querySelector('.post-description')?.textContent.toLowerCase() || '';
-                    if (!title.includes(searchTerm) && !description.includes(searchTerm)) {
-                        showCard = false;
-                    }
-                }
-                
-                // Format filter
-                if (formatValue && card.dataset.format !== formatValue) {
-                    showCard = false;
-                }
-                
-                // Status filter
-                if (statusValue !== 'todos' && card.dataset.status !== statusValue) {
-                    showCard = false;
-                }
-                
-                card.style.display = showCard ? 'block' : 'none';
-            });
-        }
-
-        // Post actions
-        function editPost(postId) {
-            console.log('[Gestionar] Edit post:', postId);
-            // Implement edit functionality
-        }
-
-        function deletePost(postId) {
-            console.log('[Gestionar] Delete post:', postId);
-            
-            // Show confirmation dialog
-            if (confirm('¿Estás seguro de que quieres borrar este post? Esta acción no se puede deshacer.')) {
-                console.log('[Gestionar] Post deleted:', postId);
-                // Implement delete functionality
-                const postCard = document.querySelector(`[onclick="deletePost(${postId})"]`)?.closest('.post-card');
-                if (postCard) {
-                    postCard.style.opacity = '0';
-                    postCard.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        postCard.remove();
-                    }, 300);
-                }
-            }
-        }
-
-        function changePostStatus(postId) {
-            console.log('[Gestionar] Change status for post:', postId);
-            
-            // Store current post ID for modal
-            const statusModal = document.getElementById('status-modal');
-            if (statusModal) {
-                statusModal.dataset.postId = postId;
-                statusModal.style.display = 'flex';
-            }
-        }
-
-        function closeStatusModal() {
-            const statusModal = document.getElementById('status-modal');
-            if (statusModal) {
-                statusModal.style.display = 'none';
-            }
-        }
-
-        function confirmStatusChange() {
-            const statusModal = document.getElementById('status-modal');
-            const postId = statusModal?.dataset.postId;
-            const newStatus = document.querySelector('input[name="new-status"]:checked')?.value;
-            
-            if (postId && newStatus) {
-                console.log('[Gestionar] Status changed for post:', postId, 'to:', newStatus);
-                
-                // Update post card
-                const postCard = document.querySelector(`[onclick="changePostStatus(${postId})"]`)?.closest('.post-card');
-                if (postCard) {
-                    postCard.dataset.status = newStatus;
-                    
-                    // Update status badge
-                    const statusBadge = postCard.querySelector('.status-badge');
-                    if (statusBadge) {
-                        statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-                        statusBadge.className = `status-badge status-${newStatus}`;
-                    }
-                }
-                
-                closeStatusModal();
-            }
-        }
-
-        // ===== FRAMEWORK INTEGRATION =====
-        // Listen for content changes (when your framework loads content)
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'childList') {
-                    // Check if post generator content was added
-                    const postGenerator = document.querySelector('.post-generator-container');
-                    if (postGenerator && !postGenerator.dataset.initialized) {
-                        console.log('[Framework] Post generator content detected, initializing...');
-                        postGenerator.dataset.initialized = 'true';
-                        initializePostGenerator();
-                    }
-                    
-                    // Check if gestionar content was added
-                    const gestionarContainer = document.querySelector('.gestionar-container');
-                    if (gestionarContainer && !gestionarContainer.dataset.initialized) {
-                        console.log('[Framework] Gestionar content detected, initializing...');
-                        gestionarContainer.dataset.initialized = 'true';
-                        initializeGestionar();
-                    }
-                }
-            });
-        });
-
-        // Start observing
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    </script>
 </body>
 </html>
