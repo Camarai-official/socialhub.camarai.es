@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionar Contenido - SocialHub</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Content Management Interface -->
-    <div class="gestionar-container">
+<!-- Content Management Interface -->
+<div class="gestionar-view">
+    <div class="post-generator-container">
+        <!-- Mobile Tabs for Responsive Design -->
+        <div class="mobile-tabs">
+            <button class="mobile-tab-btn active" data-tab="controls">
+                <span class="btn-icon">🔍</span> Filtros
+            </button>
+            <button class="mobile-tab-btn" data-tab="preview">
+                <span class="btn-icon">📋</span> Posts
+            </button>
+        </div>
+
         <!-- Left Column - Controls -->
-        <div class="controls-section">
+        <div class="controls-section active" data-content="controls">
             <div class="section-header">
                 <h2>Filtros y Navegación</h2>
                 <p>Organiza y filtra tus publicaciones</p>
@@ -84,7 +83,7 @@
         </div>
 
         <!-- Right Column - Posts List -->
-        <div class="preview-section">
+        <div class="preview-section" data-content="preview">
             <div class="section-header">
                 <h2>Lista de Posts</h2>
                 <p>Gestiona tus publicaciones</p>
@@ -92,29 +91,31 @@
             
             <!-- Posts List Container -->
             <div class="posts-container" id="posts-container">
-            <!-- Post Card 1 -->
-            <div class="post-card" data-status="borrador" data-format="empresa">
+
+
+            <div class="post-card" data-status="borrador" data-format="empresa" style="display: none;">
                 <div class="post-content">
                     <div class="post-image">
-                        <img src="https://placehold.co/300x200/20212f/E0E0E0?text=Sostenibilidad" alt="Post Image">
+                        <!-- "https://placehold.co/300x200/20212f/E0E0E0?text=Sostenibilidad" -->
+                        <img img_url alt="Post Image">
                     </div>
                     <div class="post-info">
                         <div class="post-header">
-                            <h3 class="post-title">La importancia de la sostenibilidad en la moda</h3>
+                            <h3 title class="post-title">La importancia de la sostenibilidad en la moda</h3>
                             <div class="post-badges">
-                                <span class="status-badge status-borrador">Borrador</span>
-                                <span class="format-badge format-empresa">Empresa</span>
+                                <span status_name class="status-badge status-borrador">Borrador</span>
+                                <span content_format_name class="format-badge format-empresa">Empresa</span>
                             </div>
                         </div>
-                        <p class="post-description">
+                        <p body class="post-description">
                             En un mundo donde lo efímero a menudo supera a lo duradero, la sostenibilidad en la moda emerge no solo como una tendencia, sino como un imperativo.
                         </p>
                     </div>
                     <div class="post-actions">
-                        <button class="action-btn edit-btn" onclick="editPost(1)" title="Editar">
+                        <button class="action-btn edit-btn" onclick="editPost(1)" >
                             <span class="btn-icon">✏️</span>
                         </button>
-                        <button class="action-btn delete-btn" onclick="deletePost(1)" title="Borrar">
+                        <button class="action-btn delete-btn" onclick="deletePost(1)" >
                             <span class="btn-icon">🗑️</span>
                         </button>
                     </div>
@@ -126,8 +127,7 @@
                 </div>
             </div>
 
-            <!-- Post Card 2 -->
-            <div class="post-card" data-status="aprobado" data-format="camarai">
+            <!-- <div class="post-card" data-status="aprobado" data-format="camarai">
                 <div class="post-content">
                     <div class="post-image">
                         <img src="https://placehold.co/300x200/20212f/E0E0E0?text=Huella+Digital" alt="Post Image">
@@ -164,7 +164,6 @@
                 </div>
             </div>
 
-            <!-- Post Card 3 -->
             <div class="post-card" data-status="descartado" data-format="empresa">
                 <div class="post-content">
                     <div class="post-image">
@@ -196,9 +195,9 @@
                         Cambiar Estado
                     </button>
                 </div>
-            </div>
+            </div>-->
         </div>
-    </div>
+    </div> 
 
     <!-- Status Change Modal -->
     <div class="modal-overlay" id="status-modal">
@@ -229,7 +228,21 @@
             </div>
         </div>
     </div>
-
-    <!-- JavaScript moved to index.html for framework compatibility -->
-</body>
-</html>
+    
+    <!-- Button invisible para cargar posts automáticamente -->
+    <button 
+        id="auto-load-posts-btn"
+        style="display: none;"
+        host="api" 
+        method="get"
+        path="/get-socialhub-posts"
+        response="json"
+        println=".post-card">
+        Cargar Posts
+    </button>
+    
+    <!-- Contenedor oculto para recibir los datos JSON -->
+    <!-- <div id="posts-data-container" style="display: none;"></div> -->
+    
+    <!-- Template de post-card para datos dinámicos -->
+</div>
