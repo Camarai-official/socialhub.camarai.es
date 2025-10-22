@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#554696">
+    <title>Lanzamiento SocialHub V3.0 - camarai</title>
+    
+    <!-- Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons --><script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Estilos base del body */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a; /* Fondo oscuro para el efecto */
+            padding-top: 80px; /* Espacio para la navbar fija */
+        }
+
+        /* Contenedor para el contenido principal, para que esté por encima del fondo */
+        .main-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- ESTILOS DEL FONDO ANIMADO --- */
+        .animated-background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0; 
+            overflow: hidden;
+        }
+
+        a-hole {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        a-hole:before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 2;
+            display: block;
+            width: 150%;
+            height: 140%;
+            background: radial-gradient(ellipse at 50% 55%, transparent 10%, black 100%);
+            transform: translate3d(-50%, -50%, 0);
+            content: "";
+        }
+
+        a-hole:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 5;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 50% 75%, #a900ff 20%, transparent 75%);
+            mix-blend-mode: overlay;
+            transform: translate3d(-50%, -50%, 0);
+            content: "";
+        }
+
+        @keyframes aura-glow {
+            0% { background-position: 0 100%; }
+            100% { background-position: 0 300%; }
+        }
+
+        a-hole .aura {
+            position: absolute;
+            top: -71.5%;
+            left: 50%;
+            z-index: 3;
+            width: 30%;
+            height: 140%;
+            background: linear-gradient(
+                20deg,
+                #00f8f1, #ffbd1e20 16.5%, #fe848f 33%,
+                #fe848f20 49.5%, #00f8f1 66%, #00f8f160 85.5%,
+                #ffbd1e 100%
+            ) 0 100% / 100% 200%;
+            border-radius: 0 0 100% 100%;
+            filter: blur(50px);
+            mix-blend-mode: plus-lighter;
+            opacity: 0.75;
+            transform: translate3d(-50%, 0, 0);
+            animation: aura-glow 5s infinite linear;
+        }
+
+        a-hole canvas.js-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        /* --- FIN ESTILOS DEL FONDO ANIMADO --- */
+
+        /* Estilo para las tarjetas Glassmorphism */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 20px rgba(169, 0, 255, 0.1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(169, 0, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Estilo para los iconos */
+        .icon-container {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(169, 0, 255, 0.1);
+            border: 1px solid rgba(169, 0, 255, 0.2);
+            border-radius: 0.75rem;
+            color: #c084fc;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover .icon-container {
+            background: rgba(169, 0, 255, 0.2);
+            border-color: rgba(169, 0, 255, 0.4);
+            box-shadow: 0 0 15px rgba(169, 0, 255, 0.3);
+        }
+        
+        .icon-container i {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Estilos para la barra de navegación */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-btn.active {
+            color: #38bdf8; /* sky-400 */
+            border-bottom-color: #38bdf8;
+        }
+        
+        .nav-btn:hover {
+            color: #60a5fa; /* blue-400 */
+        }
+        
+        /* Estilos para los bloques de código de los prompts */
+        .prompt-code {
+            background-color: #020617; /* slate-950 */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            overflow-x: auto;
+            color: #d1d5db; /* gray-300 */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-200 antialiased">
+    
+    <!-- Fondo Animado --><div class="animated-background-container">
+        <a-hole>
+            <canvas class="js-canvas"></canvas>
+            <div class="aura"></div>
+        </a-hole>
+    </div>
+
+    <!-- Barra de Navegación --><nav class="navbar">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center h-20">
+                <div class="flex items-center space-x-6">
+                    <button id="btn-presentacion" class="nav-btn active text-lg font-medium py-2">Presentación</button>
+                    <button id="btn-prompts" class="nav-btn text-lg font-medium py-2">Prompts</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal --><div class="main-content min-h-screen w-full px-4 sm:px-6 lg:px-8 py-16">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- SECCIÓN: PRESENTACIÓN --><div id="seccion-presentacion">
+                <!-- Cabecera --><header class="text-center mb-20">
+                    <h2 class="text-lg font-semibold text-sky-400 tracking-wider">para camarai</h2>
+                    <h1 class="mt-2 text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">
+                            SocialHub V3.0
+                        </span>
+                    </h1>
+                    <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-400 leading-relaxed">
+                        Descubre una forma más inteligente, rápida y eficiente de gestionar tus redes sociales. Hemos rediseñado la experiencia para potenciar tu creatividad y maximizar tu productividad.
+                    </p>
+                </header>
+
+                <!-- Grid de Mejoras --><main>
+                    <!-- GRUPO 1: ARQUITECTURA Y TECNOLOGÍA --><div class="mb-20">
+                        <h2 class="text-3xl font-bold text-center text-white mb-10 tracking-wide">🏗️ Arquitectura y Tecnología</h2>
+                        <p class="text-center text-slate-400 mb-12 max-w-3xl mx-auto">La base sólida que sustenta toda la nueva experiencia de SocialHub</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Tarjeta 1: Migración a React --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="atom"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Migración a React + TypeScript</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">SocialHub ha sido reescrito desde cero utilizando React y TypeScript, ofreciendo una base de código moderna, robusta y escalable.</p>
+                            </div>
+                            
+                            <!-- Tarjeta 2: Despliegue y APIs --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="server-cog"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Despliegue y APIs REST</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Conseguimos un despliegue estable en GitHub, asegurando que la aplicación en React se comunique sin problemas con servicios REST.</p>
+                            </div>
+
+                            <!-- Tarjeta 3: Cloudinary CDN --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="upload-cloud"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Gestión de Imágenes con CDN</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Las imágenes ahora se cargan en Cloudinary CDN para una entrega global ultrarrápida, almacenando solo la URL en la base de datos.</p>
+                            </div>
+
+                            <!-- Tarjeta 4: Optimización de Prompts --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="zap"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Optimización de Prompts</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Hemos reducido el tamaño de los prompts, obteniendo resultados similares con un menor consumo de tokens y mayor velocidad.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRUPO 2: GESTIÓN DE CONTENIDO --><div class="mb-20">
+                        <h2 class="text-3xl font-bold text-center text-white mb-10 tracking-wide">📝 Gestión de Contenido</h2>
+                        <p class="text-center text-slate-400 mb-12 max-w-3xl mx-auto">Herramientas avanzadas para organizar, filtrar y gestionar tu contenido de manera eficiente</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <!-- Mejora 1: Estados Dinámicos --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="layers-3"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Estados Dinámicos</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Organiza y filtra tu contenido de forma eficiente con estados dinámicos: Borrador, Aprobado y Descartado.</p>
+                            </div>
+                            
+                            <!-- Mejora 2: Filtros Avanzados --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="sliders-horizontal"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Filtros Avanzados</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Incorporamos filtros clave para que tengas control total y encuentres al instante lo que necesitas.</p>
+                            </div>
+                            
+                            <!-- Mejora 3: Modal Unificado --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="scan"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Modal de Gestión</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Un nuevo modal fusiona edición y visualización, con un modo de pantalla completa para tus imágenes.</p>
+                            </div>
+
+                            <!-- Mejora 4: Flujo Lógico --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="git-branch-plus"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Flujo de Estados</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Los estados ahora siguen una secuencia lógica y prohibitiva para garantizar un flujo de trabajo ordenado.</p>
+                            </div>
+
+                            <!-- Mejora 7: Estado "Subido" --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="cloud-upload"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Posts "Subidos"</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Marca tus posts como "Subidos" para completar su ciclo de vida y saber qué contenido ya está publicado.</p>
+                            </div>
+                            
+                            <!-- Mejora 8: Botón de Limpieza --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="eraser"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Limpieza Rápida</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Un nuevo botón limpia todos los campos de texto y el contenido generado al instante. Empezar de cero es fácil.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRUPO 3: EXPERIENCIA DE USUARIO --><div class="mb-20">
+                        <h2 class="text-3xl font-bold text-center text-white mb-10 tracking-wide">✨ Experiencia de Usuario</h2>
+                        <p class="text-center text-slate-400 mb-12 max-w-3xl mx-auto">Mejoras en la interfaz y navegación para una experiencia más intuitiva y fluida</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <!-- Mejora 5: Navegación Simplificada --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="navigation"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Navegación Intuitiva</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Rediseño con un botón flotante central y acceso rápido a paneles en la vista móvil para máxima agilidad.</p>
+                            </div>
+                            
+                            <!-- Mejora 6: Orbe de Estado N8N --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="activity-square"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Monitor de Sistema</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Un orbe flotante te indica el estado de N8N en tiempo real, para que trabajes con total tranquilidad.</p>
+                            </div>
+
+                            <!-- Mejora 9: Loader Dinámico --><div class="glass-card p-8">
+                                <div class="icon-container mb-6">
+                                    <i data-lucide="clapperboard"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-4">Loader Inmersivo</h3>
+                                <p class="text-lg text-slate-300 leading-relaxed">Las esperas son ahora más amenas con un nuevo loader con vídeo de fondo, que pronto será personalizable.</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Pie de página --><footer class="text-center mt-24">
+                    <p class="text-slate-500">Desarrollado con ❤️ para camarai.</p>
+                    <p class="text-slate-600 text-sm mt-1">&copy; 2024 SocialHub. Todos los derechos reservados.</p>
+                </footer>
+            </div>
+            
+            <!-- SECCIÓN: PROMPTS --><div id="seccion-prompts" class="hidden">
+                 <header class="text-center mb-16">
+                     <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400">
+                           Prompts de IA
+                        </span>
+                    </h1>
+                    <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-400 leading-relaxed">
+                        Aquí se encuentran los prompts de sistema utilizados para las diferentes generaciones de contenido en SocialHub.
+                    </p>
+                </header>
+                
+                <div class="space-y-12">
+                
+                    <!-- Prompt 1: Generador de Briefing Estratégico para Post (briefing_post) --><div class="glass-card p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4">Generador de Briefing Estratégico para Post</h3>
+                        <pre class="prompt-code"><code>{
+  "task_instructions": {
+    "task_name": "Generador de Briefing Estratégico para Post (briefing_post)",
+    "description": "Tu misión es actuar como un estratega de contenido B2B. Debes generar un (1) nuevo objeto JSON 'briefing_post' para la empresa 'Camarai' (software de gestión de restaurantes).",
+    "core_requirements": {
+      "creativity": "Debes idear un ángulo estratégico *nuevo* y creativo. No repitas los enfoques de 'pago', 'alergias' o 'upselling'. Explora otros 'pain points' del restaurante (ej: desperdicio de comida (food waste), análisis de datos en tiempo real, gestión de inventario vs menú, fidelización, o captación de reseñas).",
+      "tone": "Profesional, conciso, analítico y persuasivo. Enfocado 100% en problemas de negocio (ROI, eficiencia, riesgo, retención de clientes)."
+    },
+    "output_format_definition": {
+      "type": "JSON",
+      "root_key": "briefing_post",
+      "schema": {
+        "tema": {
+          "type": "String",
+          "description": "El título o concepto central del post. El 'gancho' principal.",
+          "constraints": "Máximo 125 caracteres."
+        },
+        "objetivo": {
+          "type": "String",
+          "description": "El propósito estratégico. ¿Qué queremos que el lector (dueño del restaurante) piense o haga?",
+          "constraints": "Máximo 125 caracteres."
+        },
+        "detalles_clave": {
+          "type": "String",
+          "description": "El argumento central o 'pain point' que se ataca. La lógica del problema.",
+          "constraints": "Máximo 125 caracteres."
+        },
+        "scenary": {
+          "type": "String",
+          "description": "Un micro-escenario hiper-específico que ilustra el problema en acción, resumido hasta el punto de especificar la escena pero no el contexto.",
+          "constraints": "Máximo 100 caracteres."
+        },
+        "idioma": {
+          "type": "String",
+          "description": "Código de idioma para la generación del post.",
+          "value_options": [ "ES", "EN" ]
+        },
+        "perspectiva": {
+          "type": "String",
+          "description": "El punto de vista o 'voz' del post. Debe ser una de las opciones.",
+          "value_options": [ "camarai", "empresa" ]
+        }
+      }
+    },
+    "final_instruction": "Genera únicamente el objeto JSON 'briefing_post' resultante, adhiriéndote estrictamente a todas las definiciones y restricciones de caracteres."
+  }
+}</code></pre>
+                    </div>
+                    
+                    <!-- Prompt 2: Generador de Texto V1 --><div class="glass-card p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4">Generador de Texto V1</h3>
+                        <pre class="prompt-code"><code>{
+  "accion": "generar_post_linkedin",
+  "briefing_post": {
+    "tema": "Aquí va el 'TOPIC' (ej. Sostenibilidad, Eficiencia Operativa, Barreras de Idioma)",
+    "objetivo": "Aquí va el 'OBJECTIVE' (ej. Recordar que los servidores de IA no consumen agua, Posicionar a Camarai como solución al desperdicio de comida)",
+    "detalles_clave": "Aquí van los 'DETAILS' (ej. Datos reales, una estadística específica, un ángulo concreto a incluir)",
+    "idioma": "Aquí va el 'LANGUAGE' (ej. ES, EN, FR)",
+    "perspectiva": "Aquí va la 'PERSPECTIVE' (Opciones: 'camarai' para 1ª persona [Nosotros] o 'empresa' para 3ª persona [Camarai])"
+  },
+  "rol": "estratega_experto_contenido_linkedin_especialista_hostelería",
+  "descripcion_contexto": {
+    "rol_ia": "Actúa como un generador experto de contenido viral para LinkedIn, especializado en el sector de la hostelería y tecnología...",
+    "tono_ia": "Usa el tono establecido en el campo 'tono_y_estilo'"
+  },
+  "empresa": {
+    "nombre": "Camarai",
+    "descripcion": "Camarai ha desarrollado un software POS que permite a los restaurantes gestionar pedidos y pagos directamente desde la mesa...",
+    "slogan": "Un camarero multilingüe en cada mesa.",
+    "atributos": [ "intuitivo", "escalable", "basado en el sentido común" ]
+  },
+  "audiencia_objetivo": {
+    "primaria": "Tomadores de decisiones en grupos de restaurantes y franquicias",
+    "secundaria": "Propietarios de restaurantes independientes orientados al crecimiento",
+    "terciaria": "Profesionales en las comunidades de startups, tecnología e inversión que siguen el sector de la hostelería"
+  },
+  "tono_y_estilo": {
+    "tono": [ "perspicaz", "asertivo", "pragmático", "desafiante", "corporativo", "auténtico", "orientado al valor" ],
+    "restricciones_estilo": {
+      "prohibido": [ "lenguaje poético", "tono excesivamente académico o informal", "clichés de marketing", "sonar como un asistente", "explicar la estructura del post", "venta directa", "emojis", "CTAs genéricos" ],
+      "voz": "experto de confianza de la industria"
+    }
+  },
+  "estructura_post": {
+    "hook_title": { "max_palabras": 10, "formato": "pregunta, hecho o desafío" },
+    "introduccion": { "longitud": "1–2 oraciones", "proposito": "Enmarcar un problema específico" },
+    "cuerpo": { "elements": [ "Explicar problema", "Introducir perspectiva de Camarai", "Usar oraciones concisas", "Sonar como consejo de experto" ] },
+    "cierre_estrategico": { "formato": "conclusión reflexiva" },
+    "cta": { "tipo": "invitación a la discusión profesional" },
+    "hashtags": { "cantidad": "3–5", "requisitos": [ "altamente relevantes", "profesionales", "evitar genéricos" ] }
+  },
+  "salida": {
+    "formato": "texto_plano",
+    "respuesta_directa": true,
+    "sin_variables_visibles": true,
+    "sin_explicaciones": true
+  }
+}</code></pre>
+                    </div>
+                    
+                     <!-- Prompt 3: Generador de Imagen (Optimizado) --><div class="glass-card p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4">Generador de Imagen (Optimizado)</h3>
+                        <pre class="prompt-code"><code>{"image_generation_settings":[{"prompt_type":"Image_Generation_Prompt","image_dimensions":"1200x800","style":"Render 3D, profesional, moderno, tecnológico. Idéntico a referencia Camarai (estilo, proporciones, color). Luz de estudio suave y definida, acabado premium, reflejos sutiles, profundidad de campo ligera. Todo 3D.","character_description":{"name":"Robot Camarai","appearance":"Cuerpo azul brillante, acentos rosa-lila, ojos galaxia cristal, brackets, pink antenna/earmuffs, light blue vest, black bowtie, segmented arms, white gloves, spring legs, blue/pink shoes"}},"scenario":"{{ $('Webhook').item.json.body.scenario }}"},{"filler_characters_style":{"overall_aesthetic":"3D cartoonish, cute, stylized, vibrant colors, smooth and glossy finish","details":"Humanoid 3D cartoonish (infantil, rasgos redondeados, ojos grandes expresivos, ropa moderna simple). Render pulido. Estilo coherente con Camarai pero humano. Colores armonizados, sin distracciones."}}],"artistic_direction":{"palette":"Azules corporativos, negro, verde acento, rosa-lila (sutil). Dominante fría, acentos cálidos.","background":"Modern minimalist 3D restaurant/bar. Camarai integrated in scene (seated/standing at bar/table). Composition with floor and depth. Clean 3D furniture (wood, metal). Soft background colors (earth, grays, corp. blues) that complement. Not photorealistic.","lighting":"Soft, directional studio light (like modern restaurant: warm ambient, spotlights). Discreet shadows to anchor. Controlled glossy reflections. Main + fill + rim.","composition":"Camarai central protagonist (medium/full shot). Abundant negative space, minimalist. Pose contextualizes post (not literal). Clear spatial integration, supported on floor/chair/bar."},"post_analysis_for_image_generation":{"post_text":"{{ $('AI Agent1').item.json.output.replace(/\\s+/g, \" \").trim() }}","internal_analysis_steps":["1. Summarize post (1 sentence)","2. Key concepts (5-8)","3. Central idea (1-2)","4. Tone and audience","5. Visual metaphor (max 2, no text) for pose/prop"]},"constraints":{"format":"horizontal 1200x800 px","no_text_in_image":true,"no_stock_photos":true,"no_photographic_realism":true,"camarai_identity_locked":true,"grounding_effect":"Camarai firmly supported on surface (floor, chair, bar). No floating. Coherent 3D base/floor."},"negative_prompt_additions":["generic photos","alien typographies","alien logos","alteration of Camarai robot colors","alteration of Camarai robot proportions","formats other than 1200x800","floating robot","background without floor/base","inconsistent shadow","poor integration","distracting background elements","generic or undefined background","photorealistic restaurant","people with clear facial details or identity (if there are customers, they should be silhouettes or very stylized)","complex or realistic food textures","chaotic or noisy environment"],"output_constraints":{"response_format":"image_only","text_forbidden_in_response":true,"failure_condition":"Any text in the final response will be considered a failed execution."},"camarai_company_context":{"name":"Camarai","what_it_does":"Reemplaza TPV/apps por sistema conversacional WhatsApp (QR). Cliente consulta carta, pide y paga. Mejora experiencia cliente y trabajo (camareros/gerentes). Reduce gastos, aumenta ingresos. Gestión 360 (horarios, inventario, ventas).","core_value":"Aumenta ingresos, disminuye gastos. Mejora márgenes operativos.","differentiator":["Reduce costes y aumenta ingresos","Pedidos por voz. Sin errores.","Métricas en tiempo real vía WhatsApp.","Sistema completo: desde QR hasta cocina.","Login o Inicio de sesión por WhatsApp.","Aumenta rotación de mesas y ticket medio."],"vision":"Transformar gestión hostelera. Dominar, no optimizar. Infraestructura para eficiencia y rentabilidad con mínima fricción."}}</code></pre>
+                    </div>
+                    
+                     <!-- Prompt 4: Generador de Texto FINAL --><div class="glass-card p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4">Generador de Texto FINAL</h3>
+                        <pre class="prompt-code"><code>{
+  "accion": "generar_post_linkedin",
+  "briefing_post": {
+    "TOPIC": "Aquí va el 'TOPIC' (ej. Sostenibilidad, Eficiencia Operativa, Barreras de Idioma)",
+    "OBJECTIVE": "Aquí va el 'OBJECTIVE' (ej. Recordar que los servidores de IA no consumen agua, Posicionar a Camarai como solución al desperdicio de comida)",
+    "DETAILS": "Aquí van los 'DETAILS' (ej. Datos reales, una estadística específica, un ángulo concreto a incluir)",
+    "LANGUAGE": "Aquí va el 'LANGUAGE' (ej. ES, EN, FR)",
+    "PERSPECTIVE": "Aquí va la 'PERSPECTIVE' (Opciones: 'camarai' para 1ª persona [Nosotros] o 'empresa' para 3ª persona [Camarai])"
+  },
+  "rol": "estratega_experto_contenido_linkedin_especialista_hostelería",
+  "descripcion_contexto": {
+    "rol_ia": "Actúa como un generador experto de contenido viral para LinkedIn, especializado en el sector de la hostelería y tecnología. Tu tarea es crear publicaciones con alto potencial de engagement y visibilidad, siguiendo un estilo que represente a la startup indicada en el campo 'empresa'. Tu función principal es generar publicaciones profesionales y perspicaces que posicionen a la startup Camarai como una autoridad creíble. El objetivo es educar y aportar valor, no solo volverse viral. Debes basar el contenido en el 'briefing_post' proporcionado y adoptar la perspectiva definida en el campo 'perspectiva' del briefing. Contexto de Perspectiva: \n- Si 'perspectiva' es 'camarai': Redacta en primera persona (ej. 'En Camarai creemos...', 'Nuestra solución permite...', 'Hemos observado...').\n- Si 'perspectiva' es 'empresa': Redacta en tercera persona, refiriéndote a Camarai por su nombre (ej. 'Camarai ha desarrollado...', 'La tecnología de Camarai permite...', 'La empresa observa que...').",
+    "tono_ia": "Usa el tono establecido en el campo 'tono_y_estilo'"
+  },
+  "empresa": {
+    "nombre": "Camarai",
+    "descripcion": "Camarai ha desarrollado un software POS que permite a los restaurantes gestionar pedidos y pagos directamente desde la mesa, en el idioma nativo del cliente. Nuestra tecnología está diseñada para mejorar los márgenes operativos e impulsar la rentabilidad de los negocios de hostelería.",
+    "slogan": "Un camarero multilingüe en cada mesa.",
+    "atributos": [
+      "intuitivo",
+      "escalable",
+      "basado en el sentido común"
+    ]
+  },
+  "audiencia_objetivo": {
+    "primaria": "Tomadores de decisiones en grupos de restaurantes y franquicias",
+    "secundaria": "Propietarios de restaurantes independientes orientados al crecimiento",
+    "terciaria": "Profesionales en las comunidades de startups, tecnología e inversión que siguen el sector de la hostelería"
+  },
+  "tono_y_estilo": {
+    "tono": [
+      "perspicaz",
+      "asertivo",
+      "pragmático",
+      "desafiante",
+      "corporativo",
+      "auténtico",
+      "orientado al valor"
+    ],
+    "restricciones_estilo": {
+      "prohibido": [
+        "lenguaje poético (rima, aliteración, ritmo)",
+        "tono excesivamente académico o excesivamente informal",
+        "clichés de marketing (ej. revolucionario, cambia las reglas del juego)",
+        "sonar como un asistente",
+        "explicar la estructura del post",
+        "venta directa",
+        "emojis",
+        "CTAs genéricos"
+      ],
+      "voz": "experto de confianza de la industria"
+    }
+  },
+  "estructura_post": {
+    "hook_title": {
+      "max_palabras": 10,
+      "formato": "pregunta, hecho o desafío a una creencia (basado en el 'briefing_post')"
+    },
+    "introduccion": {
+      "longitud": "1–2 oraciones",
+      "proposito": "Enmarcar un problema o situación específica y tangible que la audiencia objetivo enfrenta, relacionado con el 'briefing_post'"
+    },
+    "cuerpo": {
+      "elementos": [
+        "Explicar el problema y sus implicaciones (usando 'detalles_clave' del briefing)",
+        "Introducir la perspectiva de Camarai como una conclusión lógica al 'tema' y 'objetivo' (redactado en 1ª o 3ª persona, según el campo 'perspectiva' del briefing)",
+        "Usar oraciones claras y concisas",
+        "Desglosar ideas complejas en puntos digeribles",
+        "Sonar como consejo de experto o un memorándum"
+      ]
+    },
+    "cierre_estrategico": {
+      "formato": "conclusión reflexiva o con visión de futuro (alineada con el 'objetivo' del briefing)"
+    },
+    "cta": {
+      "tipo": "invitación a la discusión profesional entre pares",
+      "ejemplos": [
+        "Me interesa saber cómo están resolviendo esto otros líderes.",
+        "¿Cuál es tu opinión sobre este desafío operativo?"
+      ]
+    },
+    "hashtags": {
+      "cantidad": "3–5",
+      "requisitos": [
+        "altamente relevantes al 'tema' del briefing",
+        "profesionales",
+        "evitar etiquetas genéricas o de alto volumen"
+      ]
+    }
+  },
+  "formato_salida_obligatorio": {
+    "instruccion": "REGLA FINAL INQUEBRANTABLE: Tu respuesta DEBE ser únicamente el texto generado, siguiendo esta plantilla literal. No incluyas los nombres de las secciones (ej. '[HOOK]'). Respeta TODOS los saltos de línea (\\n) exactamente como se muestran. No añadas NINGÚN texto antes o después de esta estructura.",
+    "plantilla_literal": "[Texto del Hook_Title]\n[Texto de la Introducción]\n\n[Texto del Cuerpo]\n\n[Texto del Cierre_Estratégico]\n\n[Texto de la CTA]\n\n[Hashtag1] [Hashtag2] [Hashtag3] [Hashtag4]"
+  },
+  "salida": {
+    "formato": "texto_plano",
+    "estructura": "hook + introducción (unidas con salto de línea \\n), seguido del cuerpo, cierre, CTA y hashtags",
+    "respuesta_directa": true,
+    "sin_variables_visibles": true,
+    "sin_explicaciones": true
+  }
+}</code></pre>
+                    </div>
+                    
+                    <!-- Prompt 5: Generador de Imagen FINAL --><div class="glass-card p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4">Generador de Imagen FINAL</h3>
+                        <pre class="prompt-code"><code>{
+  "ctx": {
+    "post": "{{ $('Generar Post').item.json.output.replace(/\\s+/g,' ').trim().match(/[^.!?]+[.!?]/g)?.slice(0,10).join(' ') }}",
+    "scn": "{{ $('Generator SocialHub Posts').item.json.body.scenario }}"
+  },
+  "subj": {
+    "main": {
+      "name": "Camarai",
+      "look": "blue body, pink-lila accents, galaxy eyes, brackets, pink antenna/earmuffs, light blue vest, black bowtie, segmented arms, white gloves, spring legs, blue/pink shoes"
+    },
+    "fillers": "Humanoid 3D cartoon, cute, stylized, glossy, matches Camarai"
+  },
+  "scene": {
+    "palette": "cool blues, black, green accent, subtle pink-lila",
+    "desc": "Modern minimalist 3D restaurant/bar with Camarai at table. Floor visible. Soft studio lighting, warm ambient, pro framing, negative space.",
+    "positive_scene": "{{ $('Generator SocialHub Posts').item.json.body.scenario }}",
+  },
+  "rules": {
+    "type": "img_gen",
+    "style": "3D render, modern, pro, stylized",
+    "size": "1200x800",
+    "lock_id": true,
+    "ground": "Camarai grounded on 3D surface",
+    "no_text": true,
+    "no_stock": true,
+    "neg": ["realistic faces","realistic food","busy bg","bad shadows","text","logos", "scenes without scenery", "scenes with unreal walls"],
+    "out": {"format": "img_only","fail_if_text": true}
+  }
+}</code></pre>
+                    </div>
+                
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Scripts --><script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+
+        // Script para la navegación entre secciones
+        const btnPresentacion = document.getElementById('btn-presentacion');
+        const btnPrompts = document.getElementById('btn-prompts');
+        
+        const seccionPresentacion = document.getElementById('seccion-presentacion');
+        const seccionPrompts = document.getElementById('seccion-prompts');
+
+        btnPresentacion.addEventListener('click', () => {
+            // Mostrar sección Presentación y ocultar Prompts
+            seccionPresentacion.classList.remove('hidden');
+            seccionPrompts.classList.add('hidden');
+            
+            // Actualizar estado activo de los botones
+            btnPresentacion.classList.add('active');
+            btnPrompts.classList.remove('active');
+        });
+
+        btnPrompts.addEventListener('click', () => {
+            // Mostrar sección Prompts y ocultar Presentación
+            seccionPrompts.classList.remove('hidden');
+            seccionPresentacion.classList.add('hidden');
+            
+            // Actualizar estado activo de los botones
+            btnPrompts.classList.add('active');
+            btnPresentacion.classList.remove('active');
+        });
+
+        // --- SCRIPT PARA EL FONDO ANIMADO (SIN CAMBIOS) ---
+        // (Este es un script complejo para generar partículas, lo dejamos como estaba)
+        (function() {
+            // requestAnimationFrame polyfill
+            var lastTime = 0;
+            var vendors = ['ms', 'moz', 'webkit', 'o'];
+            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                           || window[vendors[x]+'CancelRequestAnimationFrame'];
+            }
+            if (!window.requestAnimationFrame)
+                window.requestAnimationFrame = function(callback, element) {
+                    var currTime = new Date().getTime();
+                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+                      timeToCall);
+                    lastTime = currTime + timeToCall;
+                    return id;
+                };
+            if (!window.cancelAnimationFrame)
+                window.cancelAnimationFrame = function(id) {
+                    clearTimeout(id);
+                };
+            
+            // Starfield
+            var Starfield = function( el, options ){
+                this.el = el;
+                this.options = this.extend( this.defaults, options );
+                this.init();
+            };
+            Starfield.prototype = {
+                defaults: {
+                    // Star properties
+                    star: {
+                        color: 'rgba(255, 255, 255, .8)',
+                        width: 3
+                    },
+                    // Line properties
+                    line: {
+                        color: 'rgba(255, 255, 255, .05)',
+                        width: .5,
+                        length: 75
+                    },
+                    // Density of stars/lines
+                    density: 15000,
+                    // MouseParallax
+                    mouseParallax: true,
+                    // Distance from which the mouse will interact with the stars
+                    mouseDetectionRadius: 200,
+                    // Animation
+                    animation: true,
+                    // Animation velocity
+                    velocity: .05,
+                    // FPS
+                    fps: 30
+                },
+                
+                init: function(){
+                    // Canvas
+                    this.canvas = this.el;
+                    this.canvas.width = window.innerWidth;
+                    this.canvas.height = window.innerHeight;
+                    this.ctx = this.canvas.getContext('2d');
+                    
+                    // Set context properties
+                    this.ctx.fillStyle = this.options.star.color;
+                    this.ctx.strokeStyle = this.options.line.color;
+                    this.ctx.lineWidth = this.options.line.width;
+
+                    // Create the stars
+                    this.stars = [];
+                    for( var i = 0; i < this.canvas.width * this.canvas.height / this.options.density; i++ ){
+                        this.stars.push( new this.Star() );
+                    }
+                    
+                    // Mouse position
+                    this.mouse = {
+                        x: 0,
+                        y: 0
+                    };
+                    
+                    // Start the animation
+                    if( this.options.animation ){
+                        this.animate();
+                    }
+                    
+                    // Redraw the canvas on resize
+                    window.addEventListener('resize', this.resize.bind(this) );
+
+                    // Follow the mouse
+                    if( this.options.mouseParallax ){
+                        window.addEventListener('mousemove', this.mousemove.bind(this) );
+                    }
+                },
+                
+                // Star object
+                Star: function(){
+                    // Position
+                    this.x = Math.random() * window.innerWidth;
+                    this.y = Math.random() * window.innerHeight;
+                    
+                    // Velocity
+                    this.vx = Math.random() * .2 - .1;
+                    this.vy = Math.random() * .2 - .1;
+                },
+                
+                // Draw
+                draw: function(){
+                    // Clear the canvas
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    
+                    // Redraw the stars
+                    for( var i = 0, star; i < this.stars.length; i++ ){
+                        star = this.stars[i];
+                        
+                        // Draw the star
+                        this.ctx.beginPath();
+                        this.ctx.arc( star.x, star.y, this.options.star.width/2, 0, Math.PI*2, false );
+                        this.ctx.fill();
+                        
+                        // Draw the lines
+                        for( var j = 0, star2; j < this.stars.length; j++ ){
+                            star2 = this.stars[j];
+                            
+                            // Check the distance between the stars
+                            var distance = Math.sqrt(
+                                Math.pow( star.x - star2.x, 2 ) +
+                                Math.pow( star.y - star2.y, 2 )
+                            );
+                            
+                            // Draw the line if the distance is small enough
+                            if( distance < this.options.line.length ){
+                                this.ctx.beginPath();
+                                this.ctx.moveTo( star.x, star.y );
+                                this.ctx.lineTo( star2.x, star2.y );
+                                this.ctx.stroke();
+                            }
+                        }
+                    }
+                },
+                
+                // Animate
+                animate: function(){
+                    // Clear the canvas
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    
+                    // Redraw the stars
+                    for( var i = 0, star; i < this.stars.length; i++ ){
+                        star = this.stars[i];
+                        
+                        // Move the star
+                        star.x += star.vx * this.options.velocity;
+                        star.y += star.vy * this.options.velocity;
+                        
+                        // Check if the star is outside the canvas
+                        if( star.x < 0 ){ star.x = this.canvas.width; }
+                        else if( star.x > this.canvas.width ){ star.x = 0; }
+                        if( star.y < 0 ){ star.y = this.canvas.height; }
+                        else if( star.y > this.canvas.height ){ star.y = 0; }
+                        
+                        // Mouse parallax
+                        if( this.options.mouseParallax ){
+                            var distance = Math.sqrt(
+                                Math.pow( star.x - this.mouse.x, 2 ) +
+                                Math.pow( star.y - this.mouse.y, 2 )
+                            );
+                            
+                            if( distance < this.options.mouseDetectionRadius ){
+                                star.x += ( star.x - this.mouse.x ) / 20;
+                                star.y += ( star.y - this.mouse.y ) / 20;
+                            }
+                        }
+                        
+                        // Draw the star
+                        this.ctx.beginPath();
+                        this.ctx.arc( star.x, star.y, this.options.star.width/2, 0, Math.PI*2, false );
+                        this.ctx.fill();
+                        
+                        // Draw the lines
+                        for( var j = i+1, star2; j < this.stars.length; j++ ){
+                            star2 = this.stars[j];
+                            
+                            // Check the distance between the stars
+                            var distance = Math.sqrt(
+                                Math.pow( star.x - star2.x, 2 ) +
+                                Math.pow( star.y - star2.y, 2 )
+                            );
+                            
+                            // Draw the line if the distance is small enough
+                            if( distance < this.options.line.length ){
+                                this.ctx.beginPath();
+                                this.ctx.moveTo( star.x, star.y );
+                                this.ctx.lineTo( star2.x, star2.y );
+                                this.ctx.stroke();
+                            }
+                        }
+                    }
+                    
+                    // Request the next frame
+                    setTimeout( function(){
+                        requestAnimationFrame( this.animate.bind(this) );
+                    }.bind(this), 1000/this.options.fps );
+                },
+                
+                // Resize
+                resize: function(){
+                    // Set the new size
+                    this.canvas.width = window.innerWidth;
+                    this.canvas.height = window.innerHeight;
+                    
+                    // Set context properties
+                    this.ctx.fillStyle = this.options.star.color;
+                    this.ctx.strokeStyle = this.options.line.color;
+                    this.ctx.lineWidth = this.options.line.width;
+
+                    // Clear the stars array
+                    this.stars = [];
+                    
+                    // Create the stars
+                    for( var i = 0; i < this.canvas.width * this.canvas.height / this.options.density; i++ ){
+                        this.stars.push( new this.Star() );
+                    }
+                },
+                
+                // Mousemove
+                mousemove: function(e){
+                    this.mouse.x = e.clientX;
+                    this.mouse.y = e.clientY;
+                },
+                
+                // Extend
+                extend: function( a, b ){
+                    for( var key in b ){
+                        if( b.hasOwnProperty(key) ){
+                            a[key] = b[key];
+                        }
+                    }
+                    return a;
+                }
+            };
+
+            // Init
+            window.addEventListener('load', function(){
+                new Starfield( document.querySelector('.js-canvas') );
+            });
+        })();
+
+    </script>
+</body>
+</html>
+
